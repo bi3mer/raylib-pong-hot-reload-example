@@ -1,6 +1,9 @@
 #include "raylib.h"
 #include <stdio.h>
 
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
+#define MAX(a, b) (((a) > (b)) ? (a) : (b))
+
 int main(void)
 {
     const int width = 1080;
@@ -38,13 +41,35 @@ int main(void)
 
     ///////////////////////////////////////////////////////////////////////////
     // Game Loop
-    InitWindow(width, height, "Raylib Template");
+    InitWindow(width, height, "Pong");
     SetTargetFPS(60);
 
     while (!WindowShouldClose())
     {
         ///////////////////////////////////////////////////////////////////////
         // Update
+        if (IsKeyDown(KEY_W))
+        {
+            paddle_left.y = MAX(play_height, paddle_left.y - 10);
+        }
+        if (IsKeyDown(KEY_S))
+        {
+            paddle_left.y =
+                MIN(height - paddle_left.height, paddle_left.y + 10);
+        }
+
+        if (IsKeyDown(KEY_UP))
+        {
+            paddle_right.y = MAX(play_height, paddle_right.y - 10);
+        }
+        if (IsKeyDown(KEY_DOWN))
+        {
+            paddle_right.y =
+                MIN(height - paddle_left.height, paddle_right.y + 10);
+        }
+
+        ball_position.x += ball_velocity.x;
+        ball_position.y += ball_velocity.y;
 
         ///////////////////////////////////////////////////////////////////////
         // Render

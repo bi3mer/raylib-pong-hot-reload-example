@@ -35,8 +35,8 @@ int main(void)
         .y = 0.5f * height,
     };
     Vector2 ball_velocity = {
-        .x = 1.0f,
-        .y = 0.0f,
+        .x = 0.0f,
+        .y = 8.0f,
     };
 
     ///////////////////////////////////////////////////////////////////////////
@@ -66,6 +66,23 @@ int main(void)
         {
             paddle_right.y =
                 MIN(height - paddle_left.height, paddle_right.y + 10);
+        }
+
+        if (ball_velocity.y > 0)
+        {
+            if (ball_position.y >= height - ball_radius)
+            {
+                ball_velocity.y *= -1;
+                ball_position.y = height - ball_radius;
+            }
+        }
+        else
+        {
+            if (ball_position.y <= play_height + ball_radius)
+            {
+                ball_velocity.y *= -1;
+                ball_position.y = play_height + ball_radius;
+            }
         }
 
         ball_position.x += ball_velocity.x;

@@ -56,6 +56,7 @@ int main(void)
 
         if (!paused)
         {
+            // paddle movement
             if (IsKeyDown(KEY_W))
             {
                 paddle_left.y = MAX(play_height, paddle_left.y - 10);
@@ -76,6 +77,30 @@ int main(void)
                     MIN(height - paddle_left.height, paddle_right.y + 10);
             }
 
+            // ball moves
+            ball_position.x += ball_velocity.x;
+            ball_position.y += ball_velocity.y;
+
+            // ball collides with the player's paddle
+            if (ball_velocity.x < 0)
+            {
+                if (CheckCollisionCircleRec(ball_position, ball_radius,
+                                            paddle_left))
+                {
+                    printf("collision y < 0\n");
+                    ball_velocity.x *= -1.05f;
+                }
+            }
+            else
+            {
+                if (CheckCollisionCircleRec(ball_position, ball_radius,
+                                            paddle_right))
+                {
+                    ball_velocity.x *= -1.05f;
+                }
+            }
+
+            // ball collision with top or bottom wall
             if (ball_velocity.y > 0)
             {
                 if (ball_position.y >= height - ball_radius)
@@ -93,6 +118,7 @@ int main(void)
                 }
             }
 
+            // ball collision with left or right wall
             if (ball_position.x < 0)
             {
                 ++player_right_score;
@@ -111,9 +137,6 @@ int main(void)
                 ball_velocity.x = 4.0f;
                 ball_velocity.y = 0.0f;
             }
-
-            ball_position.x += ball_velocity.x;
-            ball_position.y += ball_velocity.y;
         }
 
         ///////////////////////////////////////////////////////////////////////

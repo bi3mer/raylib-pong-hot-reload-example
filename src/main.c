@@ -1,4 +1,5 @@
 #include "raylib.h"
+#include "raymath.h"
 #include <stdio.h>
 
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
@@ -87,8 +88,15 @@ int main(void)
                 if (CheckCollisionCircleRec(ball_position, ball_radius,
                                             paddle_left))
                 {
-                    printf("collision y < 0\n");
-                    ball_velocity.x *= -1.05f;
+                    float hit_pos =
+                        (ball_position.y - paddle_left.y) / paddle_left.height;
+                    hit_pos = Clamp(hit_pos, 0.0f, 1.0f);
+
+                    const float bounce_angle = (hit_pos - 0.5f) * PI / 4;
+
+                    const float speed = Vector2Length(ball_velocity) * 1.05f;
+                    ball_velocity.x = speed * cosf(bounce_angle);
+                    ball_velocity.y = speed * sinf(bounce_angle);
                 }
             }
             else
@@ -96,7 +104,15 @@ int main(void)
                 if (CheckCollisionCircleRec(ball_position, ball_radius,
                                             paddle_right))
                 {
-                    ball_velocity.x *= -1.05f;
+                    float hit_pos = (ball_position.y - paddle_right.y) /
+                                    paddle_right.height;
+                    hit_pos = Clamp(hit_pos, 0.0f, 1.0f);
+
+                    const float bounce_angle = PI - (hit_pos - 0.5f) * PI / 4;
+
+                    const float speed = Vector2Length(ball_velocity) * 1.05f;
+                    ball_velocity.x = speed * cosf(bounce_angle);
+                    ball_velocity.y = speed * sinf(bounce_angle);
                 }
             }
 
